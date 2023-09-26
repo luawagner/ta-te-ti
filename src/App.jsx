@@ -72,6 +72,13 @@ function App() {
     setWinner(null)
   }
 
+  //----------------EMPATE
+  const checkedEndGame = (newBoard) => {
+    //Si la matriz está llena y todavía no ha habido una derrota...
+   return newBoard.every((square) => square !== null) //Si el valor de cada una de las posiciones 
+   //es distinto a null da true
+  }
+
    //-----------------TABLERO
   const updateBoard = (index) => {
     //Si ya hay un valor guardado en esta posición, no la actualizamos para no sobreescribir el casillero
@@ -101,6 +108,8 @@ function App() {
       //Pero no podemos imprimir "el ganador es ${winner}"(el estado que estamos seteando)
       //porque nos mostraría null, que es el valor del estado desactualizado, ya que es asíncrona la actualización
 
+    } else if (checkedEndGame(newBoard)){
+      setWinner(false) // Si el checkeo del empate da true setear el winner con false (empate)
     }
   };
 
