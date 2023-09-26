@@ -14,9 +14,8 @@ const WINNER_COMBOS = [
   [1, 4, 7],
   [2, 5, 8],
   [0, 4, 8],
-  [2, 4, 6]
-]
-
+  [2, 4, 6],
+];
 
 //-----------------COMPONENTE
 //cada cuadro del board, va a recibir children con los turnos
@@ -44,49 +43,55 @@ function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
   //Necesitamos un estado para saber de quién es el turno
   const [turn, setTurn] = useState(TURNS.X); // Inicilizamos con x
-//Estado para saber cuándo hay un ganador
-const [winner, setWinner] = useState(null) // null no hay ganador, false empate.
+  //Estado para saber cuándo hay un ganador
+  const [winner, setWinner] = useState(null); // null no hay ganador, false empate.
 
-
-const checkWinner = (boardToCheck) => {
-//revisamos todas las combinaciones ganadoras
-for (const combo of WINNER_COMBOS) { //recorremos el array de combinaciones ganadoras
-  const [a, b, c] = combo //destructuring del array de arrays
-  if(
-    boardToCheck[a] &&
-    boardToCheck[a] === boardToCheck[b] &&
-    boardToCheck[a] === boardToCheck[c] //si los valores de las posiciones coinciden, sea x u o
-  ) {
-    return boardToCheck[a] //devolver el valor ganador
-  }
-} //si no hay ganador
-return null 
-}
-//si no se da ninguno de los dos casos retornará false, empate.
+  const checkWinner = (boardToCheck) => {
+    //revisamos todas las combinaciones ganadoras
+    for (const combo of WINNER_COMBOS) {
+      //recorremos el array de combinaciones ganadoras
+      const [a, b, c] = combo; //destructuring del array de arrays
+      if (
+        boardToCheck[a] &&
+        boardToCheck[a] === boardToCheck[b] &&
+        boardToCheck[a] === boardToCheck[c] //si los valores de las posiciones coinciden, sea x u o
+      ) {
+        return boardToCheck[a]; //devolver el valor ganador
+      }
+    } //si no hay ganador
+    return null;
+  };
+  //si no se da ninguno de los dos casos retornará false, empate.
 
   const updateBoard = (index) => {
     //Si ya hay un valor guardado en esta posición, no la actualizamos para no sobreescribir el casillero
-    if (board[index] || winner)  return // Si hay un ganador, termina el juego
-    //con cada click construimos un nuevo board 
-    
+    if (board[index] || winner) return; // Si hay un ganador, termina el juego
+    //con cada click construimos un nuevo board
+
     //-----------------ACTUALIZAR EL TABLERO
-    const newBoard = [...board] //spread para hacer una copia de los valores originales del array sin modoficar el del estado, 
+    const newBoard = [...board]; //spread para hacer una copia de los valores originales del array sin modoficar el del estado,
     //a los estados siempre tenemos que tratarlos como inmutables
     //con spread op indico que quiero que se construya un nuevo array con todos los elementos del array original
-    newBoard[index] = turn // al índice donde el user clickeó le asigno el valor del turno
-    setBoard(newBoard) // Seteo el estado del board con los nuevos valores
-  
+    newBoard[index] = turn; // al índice donde el user clickeó le asigno el valor del turno
+    setBoard(newBoard); // Seteo el estado del board con los nuevos valores
+
     //-----------------CAMBIAR EL TURNO
     //Si el turno actual es de X el próximo será de O,
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     setTurn(newTurn); //seteamos el turn con el nuevo valor
 
     //----------------REVISAR SI HAY GANADOR
-    const newWinner = checkWinner(newBoard)//Llamamos a la función. Le pasamos el nuevo tablero que hemos creado
-  if (newWinner)  {
-    setWinner(newWinner) //Seteamos el estado con el dato que nos retorna la función
-  }
-  
+    const newWinner = checkWinner(newBoard); //Llamamos a la función. Le pasamos el nuevo tablero que hemos creado
+    if (newWinner) {
+      setWinner(newWinner); //Seteamos el estado con el dato que nos retorna la función
+      //Los estados son asíncronos, la actualización de este estado no detiene la ejecución del código que sigue.
+      //por ello puede suceder que se dispare el alert antes de mostrar todas las casillas ganadoras.
+     // alert(`El ganador es ${newWinner}`)
+      //Estamos seteando el estado winner con setWinner, pasándole el nuevo valor
+      //Pero no podemos imprimir "el ganador es ${winner}"(el estado que estamos seteando)
+      //porque nos mostraría null, que es el valor del estado desactualizado, ya que es asíncrona la actualización
+
+    }
   };
 
   return (
@@ -98,12 +103,8 @@ return null
           board.map((_, index) => {
             return (
               //componente del cuadrado con la key que lo identifica, el index
-              <Square
-                key={index}
-                index={index}
-                updateBoard={updateBoard}
-              >
-              {board[index]}
+              <Square key={index} index={index} updateBoard={updateBoard}>
+                {board[index]}
               </Square>
 
               //la funcion updateBoard no debe estar ejecutada porque queremos esperar a que el usuario haga click
@@ -117,6 +118,28 @@ return null
         <Square isSelected={turn === TURNS.X}>{TURNS.X}</Square>
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
+
+        {
+          winner !== null && (
+            <section className="winner">
+<div className="text">
+  <h2>
+    { winner === false ? 'Empate'
+    : 'Ganó:'
+    }
+  </h2>
+  <header className="win">
+    {winner && <Square>{winner}</Square>}
+  </header>
+
+  <footer>
+    <button>Empezar de nuevo</button>
+  </footer>
+</div>
+            </section>
+          )
+        }
+      
     </main>
   );
 }
