@@ -33,7 +33,9 @@ function App() {
 
   const updateBoard = (index) => {
     //con cada click construimos un nuevo board 
-    const newBoard = [...board] //destructuring para hacer una copia de los valores originales del array sin modoficar este
+    const newBoard = [...board] //spread para hacer una copia de los valores originales del array sin modoficar el del estado, 
+    //los estados siempre tenemos que tratarlos como inmutables
+    //con spread op indico que quiero que se construya un nuevo array con todos los elementos del array original
     newBoard[index] = turn // al índice donde el user clickeó le asigno el valor del turno
     setBoard(newBoard) // Seteo el estado del board con los nuevos valores
   
