@@ -63,12 +63,22 @@ function App() {
   };
   //si no se da ninguno de los dos casos retornará false, empate.
 
+
+  //-----------------RESETEAR EL JUEGO
+  //Resetear todos los valores de los estados.
+  const resetGame = () => {
+    setBoard((Array(9).fill(null)))
+    setTurn(TURNS.X)
+    setWinner(null)
+  }
+
+   //-----------------TABLERO
   const updateBoard = (index) => {
     //Si ya hay un valor guardado en esta posición, no la actualizamos para no sobreescribir el casillero
     if (board[index] || winner) return; // Si hay un ganador, termina el juego
     //con cada click construimos un nuevo board
 
-    //-----------------ACTUALIZAR EL TABLERO
+   //-----------------ACTUALIZAR EL TABLERO
     const newBoard = [...board]; //spread para hacer una copia de los valores originales del array sin modoficar el del estado,
     //a los estados siempre tenemos que tratarlos como inmutables
     //con spread op indico que quiero que se construya un nuevo array con todos los elementos del array original
@@ -97,6 +107,7 @@ function App() {
   return (
     <main className="board">
       <h1>Tic tac toe</h1>
+      <button onClick={resetGame}>Reset del juego</button>
       <section className="game">
         {
           //recorremos el array
@@ -133,7 +144,7 @@ function App() {
   </header>
 
   <footer>
-    <button>Empezar de nuevo</button>
+    <button onClick={resetGame}>Empezar de nuevo</button>
   </footer>
 </div>
             </section>
