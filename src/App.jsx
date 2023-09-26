@@ -32,13 +32,18 @@ function App() {
   const [turn, setTurn] = useState(TURNS.X); // Inicilizamos con x
 
   const updateBoard = (index) => {
+    //Si ya hay un valor guardado en esta posición, no la actualizamos
+    if (board[index]) return // para no sobreescribir el casillero
     //con cada click construimos un nuevo board 
+    
+    //ACTUALIZAR EL TABLERO
     const newBoard = [...board] //spread para hacer una copia de los valores originales del array sin modoficar el del estado, 
-    //los estados siempre tenemos que tratarlos como inmutables
+    //a los estados siempre tenemos que tratarlos como inmutables
     //con spread op indico que quiero que se construya un nuevo array con todos los elementos del array original
     newBoard[index] = turn // al índice donde el user clickeó le asigno el valor del turno
     setBoard(newBoard) // Seteo el estado del board con los nuevos valores
   
+    //CAMBIAR EL TURNO
     //Si el turno actual es de X el próximo será de O,
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     setTurn(newTurn); //seteamos el turn con el nuevo valor
