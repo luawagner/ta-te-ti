@@ -1,40 +1,10 @@
 import { useState } from "react";
+import { Square } from "./components/Square";
 import "./App.css";
 import confetti from "canvas-confetti"
-
-const TURNS = {
-  X: "x",
-  O: "o",
-};
-
-const WINNER_COMBOS = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
-
-//-----------------COMPONENTE
-//cada cuadro del board, va a recibir children con los turnos
-// necesita actualizarse por turno
-//el index lo necesitamos para identificar los elementos
-const Square = ({ children, isSelected, updateBoard, index }) => {
-  const className = `square ${isSelected ? "is-selected" : ""}`;
-  const handleClick = () => {
-    //necesito pasarle el index para saber cuál es el casillero que va a cambiar
-    updateBoard(index);
-  };
-  return (
-    //cada vez que haga click sobre un cuadrado se llama a handleClick, esta llama a updateBoard y esta cambia el turno.
-    <div onClick={handleClick} className={className}>
-      {children}
-    </div>
-  );
-};
+import { TURNS } from "./constants";
+import { Winner } from "./components/Winner";
+import { checkWinner, checkedEndGame } from "./logic/board";
 
 function App() {
   //-----------------ESTADOS
@@ -47,22 +17,7 @@ function App() {
   //Estado para saber cuándo hay un ganador
   const [winner, setWinner] = useState(null); // null no hay ganador, false empate.
 
-  const checkWinner = (boardToCheck) => {
-    //revisamos todas las combinaciones ganadoras
-    for (const combo of WINNER_COMBOS) {
-      //recorremos el array de combinaciones ganadoras
-      const [a, b, c] = combo; //destructuring del array de arrays
-      if (
-        boardToCheck[a] &&
-        boardToCheck[a] === boardToCheck[b] &&
-        boardToCheck[a] === boardToCheck[c] //si los valores de las posiciones coinciden, sea x u o
-      ) {
-        return boardToCheck[a]; //devolver el valor ganador
-      }
-    } //si no hay ganador
-    return null;
-  };
-  //si no se da ninguno de los dos casos retornará false, empate.
+  
 
 
   //-----------------RESETEAR EL JUEGO
@@ -73,12 +28,7 @@ function App() {
     setWinner(null)
   }
 
-  //----------------EMPATE
-  const checkedEndGame = (newBoard) => {
-    //Si la matriz está llena y todavía no ha habido una derrota...
-   return newBoard.every((square) => square !== null) //Si el valor de cada una de las posiciones 
-   //es distinto a null da true
-  }
+  
 
    //-----------------TABLERO
   const updateBoard = (index) => {
@@ -141,26 +91,7 @@ function App() {
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
 
-        {
-          winner !== null && (
-            <section className="winner">
-<div className="text">
-  <h2>
-    { winner === false ? 'Empate'
-    : 'Ganó:'
-    }
-  </h2>
-  <header className="win">
-    {winner && <Square>{winner}</Square>}
-  </header>
-
-  <footer>
-    <button onClick={resetGame}>Empezar de nuevo</button>
-  </footer>
-</div>
-            </section>
-          )
-        }
+       <Winner resetGame={resetGame} winner={winner}/>
       
     </main>
   );
