@@ -64,7 +64,7 @@ function App() {
     //-----------------GUARDAR PARTIDA EN ESTE PUNTO
     window.localStorage.setItem("board", JSON.stringify(newBoard)); //Guardamos el estado del tablero
     //Lo hacemos con JSONStringify para que nos convierta el array en string y luego podamos convertirlo nuevamente
-    window.localStorage.setItem("turn", turn);
+    window.localStorage.setItem("turn", newTurn);
 
     //----------------REVISAR SI HAY GANADOR
     const newWinner = checkWinner(newBoard); //Llamamos a la función. Le pasamos el nuevo tablero que hemos creado
