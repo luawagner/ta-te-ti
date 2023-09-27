@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import confetti from "canvas-confetti"
 
 const TURNS = {
   X: "x",
@@ -100,6 +101,7 @@ function App() {
     //----------------REVISAR SI HAY GANADOR
     const newWinner = checkWinner(newBoard); //Llamamos a la función. Le pasamos el nuevo tablero que hemos creado
     if (newWinner) {
+      confetti()
       setWinner(newWinner); //Seteamos el estado con el dato que nos retorna la función
       //Los estados son asíncronos, la actualización de este estado no detiene la ejecución del código que sigue.
       //por ello puede suceder que se dispare el alert antes de mostrar todas las casillas ganadoras.
